@@ -11,7 +11,7 @@ import pandas as pd
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 
-# In[339]:
+# In[346]:
 
 '''''This script demonstrates how to build a variational autoencoder with Keras. 
  
@@ -42,15 +42,15 @@ epsilon_std = 1.0
 
 #my tips:encoding  
 x = Input(shape=(original_dim,))
-x_res = Reshape([row,col,channel])(x)
-conv1 = Conv2D(32 ,(3,3),padding='same',kernel_initializer=keras.initializers.TruncatedNormal(mean=0.0, stddev=0.1, seed=0),activation='relu')(x_res)
-pool1 = MaxPooling2D(pool_size=(2, 2), strides=None, border_mode='same', dim_ordering='default')(conv1)
+#x_res = Reshape([row,col,channel])(x)
+#conv1 = Conv2D(32 ,(3,3),padding='same',kernel_initializer=keras.initializers.TruncatedNormal(mean=0.0, stddev=0.1, seed=0),activation='relu')(x_res)
+#pool1 = MaxPooling2D(pool_size=(2, 2), strides=None, border_mode='same', dim_ordering='default')(conv1)
 #conv2 = Conv2D(32 ,(3,3),padding='same',kernel_initializer=keras.initializers.TruncatedNormal(mean=0.0, stddev=0.1, seed=0),activation='relu')(pool1)
 #pool2 = MaxPooling2D(pool_size=(2, 2), strides=None, border_mode='same', dim_ordering='default')(conv2)
-conv_flat = Flatten()(pool1)
-h = Dense(intermediate_dim, activation='relu')(conv_flat)  
-z_mean = Dense(latent_dim)(h)  
-z_log_var = Dense(latent_dim)(h)  
+#conv_flat = Flatten()(pool1)
+#h = Dense(intermediate_dim, activation='relu')(conv_flat)  
+z_mean = Dense(latent_dim)(x)  
+z_log_var = Dense(latent_dim)(x)  
 
 #my tips:Gauss sampling,sample Z  
 def sampling(args):   
@@ -64,8 +64,8 @@ z = Lambda(sampling, output_shape=(latent_dim,))([z_mean, z_log_var])
 
 
 # we instantiate these layers separately so as to reuse them later  
-decoder_h = Dense(intermediate_dim, activation='relu')(z) 
-decoder_mean = Dense(original_dim, activation='sigmoid')(decoder_h)
+#decoder_h = Dense(intermediate_dim, activation='relu')(z) 
+decoder_mean = Dense(original_dim, activation='sigmoid')(z)
 
 #x_res = np.reshape(x,(-1,450))
 
@@ -99,7 +99,7 @@ x_test_2 = np.sin(newdata[3000:5100])
 
 
 
-# In[340]:
+# In[347]:
 
 x_train = np.hstack((x_train_1,x_train_2))
 x_test = np.hstack((x_test_1,x_test_2))
@@ -107,7 +107,7 @@ x_test = np.hstack((x_test_1,x_test_2))
 #x_test = x_test.reshape((-1,row,col,channel))
 
 
-# In[341]:
+# In[355]:
 
 import keras
 EarlyStopping = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=0, mode='auto')
@@ -124,7 +124,7 @@ vae.fit(x_train, x_train,
 # use Matplotlib (don't ask)
 
 
-# In[342]:
+# In[356]:
 
 import matplotlib.pyplot as plt
 
@@ -151,7 +151,7 @@ for i in range(1,n):
 plt.show()
 
 
-# In[343]:
+# In[357]:
 
 
 y_test = np.zeros((len(x_test),))
