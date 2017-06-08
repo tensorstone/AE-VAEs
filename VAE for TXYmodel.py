@@ -1,7 +1,6 @@
+#conv version
 
-# coding: utf-8
 
-# In[337]:
 
 import numpy as np
 import os
