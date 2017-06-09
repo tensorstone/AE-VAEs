@@ -1,6 +1,10 @@
 # AE-VAEs
 AutoEncoder and Variational AutoEncoders indifferent datasets
 
+AE in different datasets.py：
+
+
+
 VAE_idealTXY.py：
 使用VAE进行的三角晶格XYmodel聚类工作，数据使用的是理想数据，也即人工生成的数据，其中包含两个chiral order，可以用VAE进行区分
 这个程序主要用来验证不同KL term时候的分类效果，以及检验各个hidden variable对应的权重向量是否正交
