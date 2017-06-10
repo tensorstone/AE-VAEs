@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[4]:
 
 import numpy as np
 import os
@@ -11,7 +11,7 @@ import pandas as pd
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 
-# In[2]:
+# In[5]:
 
 Sample_Num = 5000
 start = []
@@ -71,7 +71,7 @@ test_artificial_2 = np.hstack((lat_cos_2,lat_sin_2))
 artificial_data = np.vstack((test_artificial,test_artificial_2))
 
 
-# In[244]:
+# In[284]:
 
 '''''This script demonstrates how to build a variational autoencoder with Keras. 
  
@@ -132,7 +132,7 @@ decoder_mean = Dense(original_dim, activation='sigmoid')(z)
 def vae_loss(x, decoder_mean):  
     xent_loss = original_dim * objectives.binary_crossentropy(x,decoder_mean)  
     kl_loss = - 0.5 * K.sum(1 + z_log_var - K.square(z_mean) - K.exp(z_log_var), axis=-1)  
-    return xent_loss + 10000*kl_loss  
+    return xent_loss +10*kl_loss  
   
 vae = Model(x, decoder_mean)  
 vae.compile(optimizer='rmsprop', loss=vae_loss)  
@@ -161,7 +161,7 @@ x_train = newdata[:8000]
 x_test = newdata[8000:]
 
 
-# In[245]:
+# In[285]:
 
 import keras
 EarlyStopping = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=0, mode='auto')
@@ -178,7 +178,7 @@ vae.fit(x_train, x_train,
 # use Matplotlib (don't ask)
 
 
-# In[246]:
+# In[286]:
 
 import matplotlib.pyplot as plt
 
@@ -205,7 +205,7 @@ for i in range(1,n):
 plt.show()
 
 
-# In[247]:
+# In[287]:
 
 
 y_test = np.zeros((len(x_test),))
@@ -226,7 +226,7 @@ plt.show()
   
 
 
-# In[248]:
+# In[288]:
 
 
 y_test = np.zeros((len(x_test),))
@@ -247,7 +247,7 @@ plt.show()
   
 
 
-# In[249]:
+# In[289]:
 
 
 y_test = np.zeros((len(x_test),))
@@ -268,7 +268,7 @@ plt.show()
   
 
 
-# In[250]:
+# In[290]:
 
 
 y_test = np.zeros((len(x_test),))
@@ -289,7 +289,7 @@ plt.show()
   
 
 
-# In[251]:
+# In[291]:
 
 
 y_test = np.zeros((len(x_test),))
@@ -310,7 +310,7 @@ plt.show()
   
 
 
-# In[252]:
+# In[292]:
 
 
 y_test = np.zeros((len(x_test),))
@@ -331,42 +331,45 @@ plt.show()
   
 
 
-# In[253]:
+# In[293]:
 
 vae.layers[1].get_weights()[0].T[0].shape
 
 
-# In[254]:
-
-print(np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[0]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[1]),[450,1])))
-print(np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[0]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[2]),[450,1])))
-print(np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[0]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[3]),[450,1])))
-print(np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[1]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[2]),[450,1])))
-print(np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[1]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[3]),[450,1])))
-print(np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[2]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[3]),[450,1])))
-
-
 # In[294]:
 
-A = [[[-0.66808927]],
-[[-1.16526425]],
-[[-0.80356842]],
-[[ 0.93500602]],
-[[-0.04527206]],
-[[ 0.79326713]]]
+W0 = np.sqrt(np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[0]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[0]),[450,1]))[0][0])
+W1 = np.sqrt(np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[1]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[1]),[450,1]))[0][0])
+W2 = np.sqrt(np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[2]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[2]),[450,1]))[0][0])
+W3 = np.sqrt(np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[3]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[3]),[450,1]))[0][0])
+print(np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[0]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[1]),[450,1]))/W0/W1)
+print(np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[0]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[2]),[450,1]))/W0/W2)
+print(np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[0]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[3]),[450,1]))/W0/W3)
+print(np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[1]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[2]),[450,1]))/W1/W2)
+print(np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[1]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[3]),[450,1]))/W1/W3)
+print(np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[2]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[3]),[450,1]))/W2/W3)
 
 
 # In[295]:
 
-A = np.asarray(A)
+A = [np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[0]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[1]),[450,1]))/W0/W1,
+np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[0]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[2]),[450,1]))/W0/W2,
+np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[0]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[3]),[450,1]))/W0/W3,
+np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[1]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[2]),[450,1]))/W1/W2,
+np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[1]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[3]),[450,1]))/W1/W3,
+np.matmul(np.reshape((vae.layers[1].get_weights()[0].T[2]),[1,450]),np.reshape((vae.layers[1].get_weights()[0].T[3]),[450,1]))/W2/W3]
 
 
 # In[296]:
 
+A = np.asarray(A)
+
+
+# In[297]:
+
 sum(np.abs(A))
 
 
-# In[258]:
+# In[298]:
 
 np.std(A)
-
