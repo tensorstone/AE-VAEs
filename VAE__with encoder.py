@@ -1,3 +1,7 @@
+'''''This script demonstrates how to build a variational autoencoder with Keras. 
+ 
+Reference: "Auto-Encoding Variational Bayes" https://arxiv.org/abs/1312.6114 
+'''
 def VAE_(dataset=dataset,latent_dim = 50, intermediate_dim = 128, batchsize = 100, nb_epoch = 50, epsilon_std = 1.0):
     import numpy as np
     import os
@@ -87,7 +91,8 @@ def VAE_(dataset=dataset,latent_dim = 50, intermediate_dim = 128, batchsize = 10
     
     
     final_decoded_imgs = vae.predict(newdata[:int_test+int_train],batch_size=batchsize)
-    encoder = Model(x, z_mean)
-    x_encoded = encoder.predict(newdata[:int_test+int_train], batch_size=batch_size)  
-
-    return final_decoded_imgs,x_encoded
+    encoder_mean = Model(x, z_mean)
+    x_encoded_mean = encoder_mean.predict(newdata[:int_test+int_train], batch_size=batch_size)  
+    encoder_z = Model(x,z)
+    x_encoded_z = encoder_z.predict(newdata[:int_test+int_train], batch_size=batch_size)  
+    return final_decoded_imgs,x_encoded_mean,x_encoded_z
